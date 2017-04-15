@@ -42,6 +42,8 @@ public class NetworkStateView extends LinearLayout {
     private LayoutInflater mInflater;
     private ViewGroup.LayoutParams params;
 
+    private OnRefreshListener mRefreshListener;
+
     public NetworkStateView(@NonNull Context context) {
         this(context, null);
     }
@@ -99,6 +101,17 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_NETWORK_ERROR;
         if (null == mErrorView) {
             mErrorView = mInflater.inflate(mErrorViewId, null);
+            View errorRefreshView = mErrorView.findViewById(R.id.error_refresh_view);
+            if (null != errorRefreshView) {
+                errorRefreshView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (null != mRefreshListener) {
+                            mRefreshListener.onRefresh();
+                        }
+                    }
+                });
+            }
             addView(mErrorView, 0, params);
         }
         showViewByState(mCurrentState);
@@ -111,6 +124,17 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_NO_NETWORK;
         if (null == mNoNetworkView) {
             mNoNetworkView = mInflater.inflate(mNoNetworkViewId, null);
+            View networkRefreshView = mNoNetworkView.findViewById(R.id.no_network_refresh_view);
+            if (null != networkRefreshView) {
+                networkRefreshView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (null != mRefreshListener) {
+                            mRefreshListener.onRefresh();
+                        }
+                    }
+                });
+            }
             addView(mErrorView, 0, params);
         }
         showViewByState(mCurrentState);
@@ -123,6 +147,17 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_EMPTY;
         if (null == mEmptyView) {
             mEmptyView = mInflater.inflate(mEmptyViewId, null);
+            View emptyRefreshView = mEmptyView.findViewById(R.id.empty_refresh_view);
+            if (null != emptyRefreshView) {
+                emptyRefreshView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (null != mRefreshListener) {
+                            mRefreshListener.onRefresh();
+                        }
+                    }
+                });
+            }
             addView(mEmptyView, 0, params);
         }
         showViewByState(mCurrentState);
@@ -150,4 +185,11 @@ public class NetworkStateView extends LinearLayout {
         }
     }
 
+    public void setOnRefreshListener(OnRefreshListener listener) {
+        mRefreshListener = listener;
+    }
+
+    public interface OnRefreshListener {
+        void onRefresh();
+    }
 }
