@@ -135,7 +135,7 @@ public class NetworkStateView extends LinearLayout {
                     }
                 });
             }
-            addView(mErrorView, 0, params);
+            addView(mNoNetworkView, 0, params);
         }
         showViewByState(mCurrentState);
     }
