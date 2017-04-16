@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:orientation="vertical"
-    android:visibility="visible"
-    app:emptyView="@layout/view_empty"
-    app:errorView="@layout/view_network_error"
-    app:loadingView="@layout/view_loading"
-    app:noNetworkView="@layout/view_no_network">
+    android:visibility="visible">
 
 </com.zht.networkstateview.ui.widget.NetworkStateView>

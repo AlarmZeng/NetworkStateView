@@ -5,11 +5,15 @@ import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.zht.networkstateview.R;
 
@@ -29,9 +33,23 @@ public class NetworkStateView extends LinearLayout {
     private static final int STATE_EMPTY = 4;
 
     private int mLoadingViewId;
+
     private int mErrorViewId;
+    private int mErrorImageId;
+    private String mErrorText;
+
     private int mNoNetworkViewId;
+    private int mNoNetworkImageId;
+    private String mNoNetworkText;
+
     private int mEmptyViewId;
+    private int mEmptyImageId;
+    private String mEmptyText;
+
+    private int mRefreshViewId;
+
+    private int mTextColor;
+    private int mTextSize;
 
     private View mLoadingView;
     private View mErrorView;
@@ -48,17 +66,33 @@ public class NetworkStateView extends LinearLayout {
     }
 
     public NetworkStateView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, R.attr.styleNetworkStateView);
     }
 
     public NetworkStateView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NetworkStateView, defStyleAttr, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NetworkStateView, defStyleAttr, R.style.NetworkStateView_Style);
+
         mLoadingViewId = typedArray.getResourceId(R.styleable.NetworkStateView_loadingView, R.layout.view_loading);
+
         mErrorViewId = typedArray.getResourceId(R.styleable.NetworkStateView_errorView, R.layout.view_network_error);
+        mErrorImageId = typedArray.getResourceId(R.styleable.NetworkStateView_nsvErrorImage, NO_ID);
+        mErrorText = typedArray.getString(R.styleable.NetworkStateView_nsvErrorText);
+
         mNoNetworkViewId = typedArray.getResourceId(R.styleable.NetworkStateView_noNetworkView, R.layout.view_no_network);
+        mNoNetworkImageId = typedArray.getResourceId(R.styleable.NetworkStateView_nsvNoNetworkImage, NO_ID);
+        mNoNetworkText = typedArray.getString(R.styleable.NetworkStateView_nsvNoNetworkText);
+
         mEmptyViewId = typedArray.getResourceId(R.styleable.NetworkStateView_emptyView, R.layout.view_empty);
+        mEmptyImageId = typedArray.getResourceId(R.styleable.NetworkStateView_nsvEmptyImage, NO_ID);
+        mEmptyText = typedArray.getString(R.styleable.NetworkStateView_nsvEmptyText);
+
+        mRefreshViewId = typedArray.getResourceId(R.styleable.NetworkStateView_nsvRefreshImage, NO_ID);
+
+        mTextColor = typedArray.getColor(R.styleable.NetworkStateView_nsvTextColor, 0x8a000000);
+        mTextSize = typedArray.getDimensionPixelSize(R.styleable.NetworkStateView_nsvTextSize, dp2px(14));
+
         typedArray.recycle();
 
         mInflater = LayoutInflater.from(context);
@@ -99,7 +133,16 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_NETWORK_ERROR;
         if (null == mErrorView) {
             mErrorView = mInflater.inflate(mErrorViewId, null);
-            View errorRefreshView = mErrorView.findViewById(R.id.error_refresh_view);
+            ImageView errorImage = (ImageView) mErrorView.findViewById(R.id.error_image);
+            TextView errorText = (TextView) mErrorView.findViewById(R.id.error_text);
+            ImageView errorRefreshView = (ImageView) mErrorView.findViewById(R.id.refresh_view);
+
+            image(errorImage, mErrorImageId);
+
+            text(errorText, mErrorText);
+
+            image(errorRefreshView, mRefreshViewId);
+
             if (null != errorRefreshView) {
                 errorRefreshView.setOnClickListener(new OnClickListener() {
                     @Override
@@ -122,7 +165,16 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_NO_NETWORK;
         if (null == mNoNetworkView) {
             mNoNetworkView = mInflater.inflate(mNoNetworkViewId, null);
-            View networkRefreshView = mNoNetworkView.findViewById(R.id.no_network_refresh_view);
+            ImageView noNetworkImage = (ImageView) mNoNetworkView.findViewById(R.id.no_network_image);
+            TextView noNetworkText = (TextView) mNoNetworkView.findViewById(R.id.no_network_text);
+            ImageView networkRefreshView = (ImageView) mNoNetworkView.findViewById(R.id.refresh_view);
+
+            image(noNetworkImage, mNoNetworkImageId);
+
+            text(noNetworkText, mNoNetworkText);
+
+            image(networkRefreshView, mRefreshViewId);
+
             if (null != networkRefreshView) {
                 networkRefreshView.setOnClickListener(new OnClickListener() {
                     @Override
@@ -145,7 +197,16 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_EMPTY;
         if (null == mEmptyView) {
             mEmptyView = mInflater.inflate(mEmptyViewId, null);
-            View emptyRefreshView = mEmptyView.findViewById(R.id.empty_refresh_view);
+            ImageView emptyImage = (ImageView) mEmptyView.findViewById(R.id.empty_image);
+            TextView emptyText = (TextView) mEmptyView.findViewById(R.id.empty_text);
+            ImageView emptyRefreshView = (ImageView) mEmptyView.findViewById(R.id.refresh_view);
+
+            image(emptyImage, mEmptyImageId);
+
+            text(emptyText, mEmptyText);
+
+            image(emptyRefreshView, mRefreshViewId);
+
             if (null != emptyRefreshView) {
                 emptyRefreshView.setOnClickListener(new OnClickListener() {
                     @Override
@@ -181,6 +242,28 @@ public class NetworkStateView extends LinearLayout {
         if (null != mEmptyView) {
             mEmptyView.setVisibility(state == STATE_EMPTY ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void image(ImageView view, int imageId) {
+        if (null != view && imageId != NO_ID) {
+            view.setImageResource(imageId);
+        }
+    }
+
+    private void text(TextView view, String str) {
+        if (null != view && !TextUtils.isEmpty(str)) {
+            view.setText(str);
+            view.setTextColor(mTextColor);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
+        }
+    }
+
+    private int dp2px(float dp) {
+        return (int) (getResources().getDisplayMetrics().density * dp + 0.5f);
+    }
+
+    private int px2dp(float px) {
+        return (int) (px / getResources().getDisplayMetrics().density + 0.5f);
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {
