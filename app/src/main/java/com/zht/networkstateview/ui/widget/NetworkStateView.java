@@ -6,7 +6,6 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,6 @@ public class NetworkStateView extends LinearLayout {
 
         mInflater = LayoutInflater.from(context);
         params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        setGravity(Gravity.CENTER);
         setBackgroundColor(getResources().getColor(R.color.white));
     }
 

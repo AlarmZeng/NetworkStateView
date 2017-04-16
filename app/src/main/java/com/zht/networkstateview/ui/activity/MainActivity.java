@@ -9,7 +9,7 @@ import com.zht.networkstateview.App;
 import com.zht.networkstateview.R;
 import com.zht.networkstateview.ui.widget.NetworkStateView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, NetworkStateView.OnRefreshListener {
 
     private NetworkStateView networkStateView;
 
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bt_noNetwork.setOnClickListener(this);
         bt_empty.setOnClickListener(this);
 
+        networkStateView.setOnRefreshListener(this);
         networkStateView.showLoading();
         showSuccess();
     }
@@ -65,6 +66,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showSuccess();
     }
 
+    @Override
+    public void onRefresh() {
+        networkStateView.showLoading();
+        showSuccess();
+    }
+
     private void showSuccess() {
         App.getMainThreadHandler().postDelayed(new Runnable() {
             @Override
@@ -73,5 +80,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }, 2000);
     }
-
 }
