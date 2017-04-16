@@ -6,9 +6,9 @@
 ![](https://github.com/AlarmZeng/NetworkStateView/blob/master/screenshots/screenshot3.png)
 ![](https://github.com/AlarmZeng/NetworkStateView/blob/master/screenshots/screenshot4.png)
 
-##使用
+## 使用
 
-###设置状态布局文件和默认样式
+### 设置状态布局文件和默认样式
 
 * 直接在布局文件中声明
 
@@ -43,7 +43,7 @@
 			...
 	    </style>
 
-###属性
+### 属性
 
 	<declare-styleable name="NetworkStateView">
 
@@ -80,7 +80,7 @@
         <attr name="nsvTextColor" format="color" />
     </declare-styleable>
 
-###示例
+### 示例
 
 	NetworkStateView networkStateView = (NetworkStateView) findViewById(R.id.nsv_state_view);
 
@@ -93,7 +93,7 @@
 	//没有数据
 	networkStateView.showEmpty();
 
-##注意
+## 注意
 
 在对状态View进行控件id设置时，需要根据下面规则进行设置：
 
@@ -106,3 +106,7 @@
 * 进行刷新显示的图片id：refresh_view
 
 详细可见代码
+
+## 文章
+
+对**NetworkStateView**的详细介绍可以查看文章[NetworkStateView](http://www.jianshu.com/p/858d41972d15)
