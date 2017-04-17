@@ -9,6 +9,8 @@ import android.os.Handler;
 
 public class App extends Application {
 
+    private static App mContext;
+
     private static Handler mMainThreadHandler;
 
     @Override
@@ -16,6 +18,10 @@ public class App extends Application {
         super.onCreate();
 
         mMainThreadHandler = new Handler();
+    }
+
+    public static App getApplication() {
+        return mContext;
     }
 
     public static Handler getMainThreadHandler() {

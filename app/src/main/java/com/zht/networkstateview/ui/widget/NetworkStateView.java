@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zht.networkstateview.R;
+import com.zht.networkstateview.utils.UIUtils;
 
 /**
  * Created by ZHT on 2017/4/15.
@@ -91,13 +92,13 @@ public class NetworkStateView extends LinearLayout {
         mRefreshViewId = typedArray.getResourceId(R.styleable.NetworkStateView_nsvRefreshImage, NO_ID);
 
         mTextColor = typedArray.getColor(R.styleable.NetworkStateView_nsvTextColor, 0x8a000000);
-        mTextSize = typedArray.getDimensionPixelSize(R.styleable.NetworkStateView_nsvTextSize, dp2px(14));
+        mTextSize = typedArray.getDimensionPixelSize(R.styleable.NetworkStateView_nsvTextSize, UIUtils.dp2px(14));
 
         typedArray.recycle();
 
         mInflater = LayoutInflater.from(context);
         params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        setBackgroundColor(getResources().getColor(R.color.white));
+        setBackgroundColor(UIUtils.getColor(R.color.white));
     }
 
     @Override
@@ -256,14 +257,6 @@ public class NetworkStateView extends LinearLayout {
             view.setTextColor(mTextColor);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         }
-    }
-
-    private int dp2px(float dp) {
-        return (int) (getResources().getDisplayMetrics().density * dp + 0.5f);
-    }
-
-    private int px2dp(float px) {
-        return (int) (px / getResources().getDisplayMetrics().density + 0.5f);
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {
