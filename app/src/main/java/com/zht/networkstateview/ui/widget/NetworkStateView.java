@@ -33,6 +33,9 @@ public class NetworkStateView extends LinearLayout {
     private static final int STATE_NO_NETWORK = 3;
     private static final int STATE_EMPTY = 4;
 
+    //布局添加位置
+    private static final int VIEW_POSITION = 0;
+
     private int mLoadingViewId;
 
     private int mErrorViewId;
@@ -122,7 +125,7 @@ public class NetworkStateView extends LinearLayout {
         mCurrentState = STATE_LOADING;
         if (null == mLoadingView) {
             mLoadingView = mInflater.inflate(mLoadingViewId, null);
-            addView(mLoadingView, 0, params);
+            addView(mLoadingView, VIEW_POSITION, params);
         }
         showViewByState(mCurrentState);
     }
@@ -154,7 +157,7 @@ public class NetworkStateView extends LinearLayout {
                     }
                 });
             }
-            addView(mErrorView, 0, params);
+            addView(mErrorView, VIEW_POSITION, params);
         }
         showViewByState(mCurrentState);
     }
@@ -186,7 +189,7 @@ public class NetworkStateView extends LinearLayout {
                     }
                 });
             }
-            addView(mNoNetworkView, 0, params);
+            addView(mNoNetworkView, VIEW_POSITION, params);
         }
         showViewByState(mCurrentState);
     }
@@ -218,7 +221,7 @@ public class NetworkStateView extends LinearLayout {
                     }
                 });
             }
-            addView(mEmptyView, 0, params);
+            addView(mEmptyView, VIEW_POSITION, params);
         }
         showViewByState(mCurrentState);
     }
